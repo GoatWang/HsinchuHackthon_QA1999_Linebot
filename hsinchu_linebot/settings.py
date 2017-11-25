@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ["hsinchu-linebot.herokuapp.com"]
 # Application definition
 
 INSTALLED_APPS = [
+    'society.apps.SocietyConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
