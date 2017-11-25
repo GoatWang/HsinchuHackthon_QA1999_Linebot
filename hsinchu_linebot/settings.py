@@ -29,7 +29,7 @@ LINE_CHANNEL_SECRET = "8f62e3dfdb9b6d94ff8b4b404f95d4a7"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["hsinchu-linebot.herokuapp.com"]
 
 
 # Application definition
@@ -51,6 +51,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+MIDDLEWARE_CLASSES = [
+# 'django.middleware.security.SecurityMiddleware',
+'whitenoise.middleware.WhiteNoiseMiddleware',
+#...
 ]
 
 ROOT_URLCONF = 'hsinchu_linebot.urls'
