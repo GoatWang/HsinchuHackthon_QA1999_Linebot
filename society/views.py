@@ -51,7 +51,7 @@ def callback(request):
 def webcallback(request, query):
     cat = clf.predict_cat(query)
     contactInfo = clf.GetContactInfo(cat)
-    return contactInfo
+    return HttpResponse(contactInfo)
 
 
 
