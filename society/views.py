@@ -47,6 +47,13 @@ def callback(request):
     else:
         return HttpResponseBadRequest()
 
+@csrf_exempt
+def webcallback(request, query):
+    cat = clf.predict_cat(query)
+    contactInfo = clf.GetContactInfo(cat)
+    return contactInfo
+
+
 
 def index(request):
     return HttpResponse("Test")
