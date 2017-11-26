@@ -35,9 +35,11 @@ def callback(request):
         for event in events:
             if isinstance(event, MessageEvent):
                 if isinstance(event.message, TextMessage):
+                    cat = clf.predict_cat(event.message.text)
+                    contactInfo = clf.GetContactInfo(cat)
                     line_bot_api.reply_message(
                         event.reply_token,
-                        TextSendMessage(text=clf.predict_cat(event.message.text))
+                        TextSendMessage(text=contactInfo)
                     )
 
 

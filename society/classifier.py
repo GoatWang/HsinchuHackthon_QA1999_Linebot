@@ -22,6 +22,9 @@ class Classifier():
             self.cat_mapping = json.load(f)
         with open(os.path.join('society', 'models', 'vectorterms'), 'r' , encoding='utf8') as f:
             self.vectorterms = json.load(f)
+        with open(os.path.join('society', 'models', 'contactinfo.json'), 'r', encoding='utf8') as f:
+            self.cat_contact_mapping = json.load(f)
+
 
     def getcat_mapping(self):
         return self.cat_mapping
@@ -63,6 +66,10 @@ class Classifier():
         # print(cat)
 
         return cat
+
+    def GetContactInfo(self, cat):
+        contactInfo = self.cat_contact_mapping.get(cat)
+        return contactInfo
 
 if __name__ == "__main__":
     clf = Classifier()
