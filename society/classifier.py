@@ -1,6 +1,8 @@
+from django.conf import settings
+
 import jieba
 import os
-jieba.set_dictionary(os.path.join('models', 'dict.txt.big'))
+jieba.set_dictionary(os.path.join(settings.MODEL_ROOT, 'dict.txt.big'))
 
 from pymongo import MongoClient
 import pandas as pd
@@ -11,12 +13,14 @@ import json
 import numpy as np
 
 
+
+
 class Classifier():
 
     def __init__(self):
-        with open(os.path.join('models', 'cat_mapping'), 'r' , encoding='utf8') as f:
+        with open(os.path.join(settings.MODEL_ROOT, 'cat_mapping'), 'r' , encoding='utf8') as f:
             self.cat_mapping = json.load(f)
-        with open(os.path.join('models', 'vectorterms'), 'r' , encoding='utf8') as f:
+        with open(os.path.join(settings.MODEL_ROOT, 'vectorterms'), 'r' , encoding='utf8') as f:
             self.vectorterms = json.load(f)
 
     def getcat_mapping(self):
@@ -27,7 +31,7 @@ class Classifier():
 
     def predict_cat(self, test_sentence):
         bst = xgb.Booster({'nthread': 4})  # init model
-        bst.load_model(os.path.join('models', '20171125 232430246178.model'))  # load data
+        bst.load_model(os.path.join(settings.MODEL_ROOT, '20171125 232430246178.model'))  # load data
 
         # print(test_sentence)
         words = list(jieba.cut(test_sentence, cut_all=False))
