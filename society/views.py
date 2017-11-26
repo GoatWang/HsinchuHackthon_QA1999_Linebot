@@ -6,6 +6,11 @@ from django.views.decorators.csrf import csrf_exempt
 from linebot import LineBotApi, WebhookParser ##, WebhookHanlder
 from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+
+
+from classifier import Classifier
+clf = Classifier()
+
 # Create your views here.
 
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
@@ -32,7 +37,7 @@ def callback(request):
                 if isinstance(event.message, TextMessage):
                     line_bot_api.reply_message(
                         event.reply_token,
-                        TextSendMessage(text=event.message.text)
+                        TextSendMessage(text=clf.predict_cat(event.message.text))
                     )
 
 
