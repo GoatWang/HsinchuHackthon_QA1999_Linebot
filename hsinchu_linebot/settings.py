@@ -138,7 +138,3 @@ STATICFILES_DIRS = (
 )
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
-
-
-# MODEL_ROOT = os.path.join(PROJECT_ROOT, 'society', 'models')
