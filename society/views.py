@@ -8,7 +8,7 @@ from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 
-from classifier import Classifier
+from society.classifier import Classifier
 clf = Classifier()
 
 # Create your views here.
