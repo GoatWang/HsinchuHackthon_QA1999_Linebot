@@ -11,6 +11,7 @@ import xgboost as xgb
 import json
 import numpy as np
 
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 
@@ -29,6 +30,8 @@ class Classifier():
             self.vectorterms = json.load(f)
         with open(os.path.join(ModelsDir, 'contactinfo.json'), 'r', encoding='utf8') as f:
             self.cat_contact_mapping = json.load(f)
+        with open(os.path.join(ModelsDir, 'questions.json'), 'r', encoding='utf8') as f:
+            self.data = json.load(f)
 
         self.bst = xgb.Booster({'nthread': 4})  # init model
         self.bst.load_model(os.path.join(ModelsDir, '20171125 232430246178.model'))  # load data
@@ -40,7 +43,7 @@ class Classifier():
     def getvectorterms(self):
         return self.vectorterms
 
-    def predict_cat(self, test_sentence):
+    def to_vec(self, test_sentence):
         # print(test_sentence)
         words = list(jieba.cut(test_sentence, cut_all=False))
         # print(", ".join(words))
@@ -59,7 +62,10 @@ class Classifier():
             if term in self.vectorterms:
                 idx = self.vectorterms.index(term)
                 self_main_list[idx] += 1
-            
+        return self_main_list
+
+    def predict_cat(self, test_sentence):
+        self_main_list = self.to_vec(test_sentence)
         vector = self_main_list
         cat_num = self.bst.predict(xgboost.DMatrix(np.array([vector,])))[0]
         # print(cat_num)
@@ -71,6 +77,59 @@ class Classifier():
         # print(cat)
 
         return cat
+
+    def findsimilar(self, test_sentence):
+        df = pd.DataFrame(self.data)
+        test_vector = self.to_vec(test_sentence)
+
+        similar_scores = []
+        for num, vector in enumerate(df['vector']):
+            score = cosine_similarity([np.array(vector), np.array(test_vector)])[0][1]
+            similar_scores.append((num, score))
+
+        sorted_scores = sorted(similar_scores, key=lambda x: x[1], reverse=True)
+        relatedquery_idxs =  [idx[0] for idx in sorted_scores][:5]
+
+        feedbackstring = "您是否要請教以下問題?\n"
+        # feedbackstring += "==========================================================================="
+        # feedbackstring += "==========================================================================="
+        for n, row in df.loc[relatedquery_idxs].iterrows():
+            feedbackstring += str(n + 1) + '. ' + row['question'] + "\n"
+            feedbackstring += row['ans'] + "\n"
+            # feedbackstring += "==========================================================================="
+            # feedbackstring += "==========================================================================="
+        
+        feedbackstring += "若沒有回答道您的問題，請參考以下聯絡方式: \n"
+        feedbackstring += self.GetContactInfo(self.predict_cat(test_sentence))
+
+        return feedbackstring
+
+    # def findanswer(self, test_sentence):
+    #     df = pd.DataFrame(self.data)
+    #     test_vector = self.to_vec(test_sentence)
+
+    #     similar_scores = []
+    #     for num, vector in enumerate(df['vector']):
+    #         score = cosine_similarity([np.array(vector), np.array(test_vector)])[0][1]
+    #         similar_scores.append((num, score))
+
+    #     sorted_scores = sorted(similar_scores, key=lambda x: x[1], reverse=True)
+    #     idx =  [idx[0] for idx in sorted_scores][0]
+    #     df.loc[idx, 'ans'] 
+
+    # def feedback(self, test_sentence):
+    #     df = pd.DataFrame(self.data)
+    #     relatedquery_idxs = self.findsimilar(test_sentence)
+    #     questions = df[relatedquery_idxs]['question']
+
+    #     feedbackstring = "您是否是請教以下問題?\n"
+    #     for n, q in enumerate(questions):
+    #         feedbackstring += str(n) + q + "\n"
+
+    #     feedbackstring += self.predict_cat(test_sentence)
+    #     return feedbackstring
+
+
 
     def GetContactInfo(self, cat):
         contactInfo = self.cat_contact_mapping.get(cat)

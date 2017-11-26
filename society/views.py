@@ -42,18 +42,18 @@ def callback(request):
                         TextSendMessage(text=contactInfo)
                     )
 
-
         return HttpResponse()
     else:
         return HttpResponseBadRequest()
 
 @csrf_exempt
 def webcallback(request, query):
-    cat = clf.predict_cat(query)
-    contactInfo = clf.GetContactInfo(cat)
-    return HttpResponse(contactInfo)
-
-
+    # cat = clf.predict_cat(query)
+    similars = clf.findsimilar(query)
+    # contactInfo = clf.GetContactInfo(cat)
+    # return HttpResponse(contactInfo)
+    
+    return HttpResponse(similars)
 
 def index(request):
     return HttpResponse("Test")
