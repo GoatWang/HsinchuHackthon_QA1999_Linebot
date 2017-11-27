@@ -37,7 +37,6 @@ def _handle_text_msg(event):
     questions = list(relatedrows['question'])
     answers = list(relatedrows['ans'])
 
-    print(feedbackstring[:159])
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
@@ -45,7 +44,7 @@ def _handle_text_msg(event):
             actions = [
                 MessageTemplateAction(label="1. " + questions[0][:7] + "...", text="回覆您的問題:\n" + answers[0][:250]),
                 MessageTemplateAction(label="2. " + questions[1][:7] + "...", text="回覆您的問題:\n" + answers[1][:250]),
-                MessageTemplateAction(label="3. " + questions[2][:7] + "...", text="回覆您的問題:\n" + answers[2][:250]),
+                # MessageTemplateAction(label="3. " + questions[2][:7] + "...", text="回覆您的問題:\n" + answers[2][:250]),
                 MessageTemplateAction(label="皆不是以上問題!", text= "回覆您的問題:\n" + contactinfo[:250])
             ]
         )
