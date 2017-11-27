@@ -30,6 +30,8 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
     text = event.message.text
     print(relatedrows['question'][1][:5])
+    print(relatedrows['question'][1][:5])
+    print(relatedrows['question'][1][:5])
 
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
