@@ -85,7 +85,9 @@ def callback(request):
                         cat = clf.predict_cat()
                         contactinfo = clf.getcontactinfo(cat)
                         relatedrows = clf.findsimilar()
+                        print(relatedrows['question'])
                         feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+                        print(feedbackstring)
                         print(len(feedbackstring))
                         print(len(relatedrows))
                         # line_bot_api.reply_message(
