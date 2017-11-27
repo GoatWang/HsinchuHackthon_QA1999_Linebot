@@ -17,7 +17,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 class Classifier():
 
-    def __init__(self):
+    def __init__(self, test_sentence):
         if __name__ == "__main__":
             ModelsDir = 'models'
         else:
@@ -32,6 +32,10 @@ class Classifier():
             self.cat_contact_mapping = json.load(f)
         with open(os.path.join(ModelsDir, 'questions.json'), 'r', encoding='utf8') as f:
             self.data = json.load(f)
+            self.df = pd.DataFrame(self.data)
+
+        self.test_sentence = test_sentence
+        self.test_vec = self.to_vec(test_sentence)
 
         self.bst = xgb.Booster({'nthread': 4})  # init model
         self.bst.load_model(os.path.join(ModelsDir, '20171125 232430246178.model'))  # load data
@@ -64,8 +68,8 @@ class Classifier():
                 self_main_list[idx] += 1
         return self_main_list
 
-    def predict_cat(self, test_sentence):
-        self_main_list = self.to_vec(test_sentence)
+    def predict_cat(self):
+        self_main_list = self.to_vec(self.test_sentence)
         vector = self_main_list
         cat_num = self.bst.predict(xgboost.DMatrix(np.array([vector,])))[0]
         # print(cat_num)
@@ -75,12 +79,11 @@ class Classifier():
             if str(int(cat_num)) == str(value):
                 cat = key
         # print(cat)
-
         return cat
 
-    def findsimilar(self, test_sentence):
-        df = pd.DataFrame(self.data)
-        test_vector = self.to_vec(test_sentence)
+    def findsimilar(self):
+        df = self.df
+        test_vector = self.to_vec(self.test_sentence)
 
         similar_scores = []
         for num, vector in enumerate(df['vector']):
@@ -90,54 +93,45 @@ class Classifier():
         sorted_scores = sorted(similar_scores, key=lambda x: x[1], reverse=True)
         relatedquery_idxs =  [idx[0] for idx in sorted_scores][:5]
 
+        return df.loc[relatedquery_idxs]
+
+    def getfeedbackinfo(self, cat, relatedrows):
+        contactInfo = self.cat_contact_mapping.get(cat)
+
         feedbackstring = "您是否要請教以下問題?\n"
-        # feedbackstring += "==========================================================================="
-        # feedbackstring += "==========================================================================="
-        for n, row in df.loc[relatedquery_idxs].iterrows():
+        for n, row in relatedrows.iterrows():
             feedbackstring += str(n + 1) + '. ' + row['question'] + "\n"
-            feedbackstring += row['ans'] + "\n"
-            # feedbackstring += "==========================================================================="
-            # feedbackstring += "==========================================================================="
         
         feedbackstring += "若沒有回答道您的問題，請參考以下聯絡方式: \n"
-        feedbackstring += self.GetContactInfo(self.predict_cat(test_sentence))
+        feedbackstring += contactInfo
 
         return feedbackstring
 
-    # def findanswer(self, test_sentence):
-    #     df = pd.DataFrame(self.data)
-    #     test_vector = self.to_vec(test_sentence)
-
-    #     similar_scores = []
-    #     for num, vector in enumerate(df['vector']):
-    #         score = cosine_similarity([np.array(vector), np.array(test_vector)])[0][1]
-    #         similar_scores.append((num, score))
-
-    #     sorted_scores = sorted(similar_scores, key=lambda x: x[1], reverse=True)
-    #     idx =  [idx[0] for idx in sorted_scores][0]
-    #     df.loc[idx, 'ans'] 
-
-    # def feedback(self, test_sentence):
-    #     df = pd.DataFrame(self.data)
-    #     relatedquery_idxs = self.findsimilar(test_sentence)
-    #     questions = df[relatedquery_idxs]['question']
-
-    #     feedbackstring = "您是否是請教以下問題?\n"
-    #     for n, q in enumerate(questions):
-    #         feedbackstring += str(n) + q + "\n"
-
-    #     feedbackstring += self.predict_cat(test_sentence)
-    #     return feedbackstring
 
 
 
-    def GetContactInfo(self, cat):
-        contactInfo = self.cat_contact_mapping.get(cat)
-        return contactInfo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
-    clf = Classifier()
-    cat = clf.predict_cat("兒童")
+    clf = Classifier("兒童")
+    cat = clf.predict_cat()
     print(cat)
     # def getall(col_name):
     #     conn = MongoClient()
