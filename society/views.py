@@ -32,25 +32,20 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
     questions = list(relatedrows['question'])
     answers = list(relatedrows['ans'])
 
-    # actions = []
-    # for i in range(len(relatedrows)):
-    #     actions.append(PostbackTemplateAction(label="1. " + questions[i][:7] + "...", text=answers[i][:200], data='buttonfeedback=1'))
-    # actions.append(PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=1'))
-    
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
             text= feedbackstring[:159],
-            # actions = actions,
             actions = [
-                PostbackTemplateAction(label="1. " + questions[0][:7] + "...", text="回覆您的問題:\n" + answers[0][:300], data='buttonfeedback=1'),
-                PostbackTemplateAction(label="2. " + questions[1][:7] + "...", text="回覆您的問題:\n" + answers[1][:300], data='buttonfeedback=1'),
-                PostbackTemplateAction(label="3. " + questions[2][:7] + "...", text="回覆您的問題:\n" + answers[2][:300], data='buttonfeedback=1'),
-                PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=1')
+                TextSendMessage(label="1. " + questions[0][:7] + "...", text="回覆您的問題:\n" + answers[0][:300]),
+                TextSendMessage(label="2. " + questions[1][:7] + "...", text="回覆您的問題:\n" + answers[1][:300]),
+                # TextSendMessage(label="3. " + questions[2][:7] + "...", text="回覆您的問題:\n" + answers[2][:300]),
+                TextSendMessage(label="皆不是以上問題!", text= "回覆您的問題:\n" + contactinfo[:300])
             ]
         )
     )
-    
+
+
     line_bot_api.reply_message(
         event.reply_token,
         message
@@ -107,6 +102,7 @@ def webcallback(request, query):
     cat = clf.predict_cat()
     feedbackstring = clf.getcontactinfo(cat)
     relatedrows = clf.findsimilar()
+    print(clf.getfeedbackinfo(cat, relatedrows))
     print(len(relatedrows))
     for i, row in relatedrows.iterrows():
         question = row['question']
@@ -116,3 +112,12 @@ def webcallback(request, query):
 
 def index(request):
     return HttpResponse("Test")
+
+
+
+
+
+
+
+
+

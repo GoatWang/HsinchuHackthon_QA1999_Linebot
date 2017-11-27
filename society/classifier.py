@@ -86,7 +86,7 @@ class Classifier():
                 questions.append(question)
 
         sorted_scores = sorted(similar_scores, key=lambda x: x[1], reverse=True)
-        relatedquery_idxs =  [idx[0] for idx in sorted_scores][:3]
+        relatedquery_idxs =  [idx[0] for idx in sorted_scores][:2]
 
         return df.loc[relatedquery_idxs]
 
