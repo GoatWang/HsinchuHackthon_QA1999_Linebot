@@ -32,26 +32,26 @@ def _handle_text_msg(event, relatedrows, contactinfo):
 
     actions = []
     for num, row in relatedrows.iterrows():
-        print(row['question'], row['ans'])
-        actions.append(MessageTemplateAction(label=row['question'], text=row['ans']))
-    actions.append(MessageTemplateAction(label="皆不是以上問題!", text=contactinfo))
+        # print(row['question'], row['ans'])
+        # actions.append(MessageTemplateAction(label=row['question'][:10], text=row['ans'][:300]))
+        actions.append(PostbackTemplateAction(label=str(num) + row['question'][:15], text=row['ans'][:300], data='buttonfeedback=True'))
+        
+
+    actions.append(MessageTemplateAction(label="皆不是以上問題!", text=contactinfo[:300]))
 
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
-            
-            # thumbnail_image_url='https://example.com/image.jpg',
-            title='您是否要請問以下問題?',
-            text='Please select',
-            # actions = actions
-            actions=[
-                MessageTemplateAction(label='message', text='message text'),
-                MessageTemplateAction(label='message', text='message text'),
-                MessageTemplateAction(label='message', text='message text'),
-                MessageTemplateAction(label='message', text='message text'),
-                # PostbackTemplateAction(label='postback', text='postback text', data='action=buy&itemid=1'),
-                # URITemplateAction(label='uri', uri='http://example.com/')
-            ]
+            text='請選擇您的問題編號?',
+            actions = actions
+            # actions=[
+            #     MessageTemplateAction(label='message', text='message text'),
+            #     MessageTemplateAction(label='message', text='message text'),
+            #     MessageTemplateAction(label='message', text='message text'),
+            #     MessageTemplateAction(label='message', text='message text'),
+            #     # PostbackTemplateAction(label='postback', text='postback text', data='action=buy&itemid=1'),
+            #     # URITemplateAction(label='uri', uri='http://example.com/')
+            # ]
         )
     )
     
@@ -85,7 +85,7 @@ def _handle_text_msg(event, relatedrows, contactinfo):
 
 
 @csrf_exempt
-def callback(request):
+def callback(request, buttonfeedback=False):
     if request.method == 'POST':
         signature = request.META['HTTP_X_LINE_SIGNATURE']
         body = request.body.decode('utf-8')
@@ -101,16 +101,19 @@ def callback(request):
         for event in events:
             if isinstance(event, MessageEvent):
                 if isinstance(event.message, TextMessage):
-                    clf = Classifier(event.message.text)
-                    cat = clf.predict_cat()
-                    contactinfo = clf.getcontactinfo(cat)
-                    relatedrows = clf.findsimilar()
-                    _handle_text_msg(event, relatedrows, contactinfo)
+                    if not buttonfeedback:
+                        clf = Classifier(event.message.text)
+                        cat = clf.predict_cat()
+                        contactinfo = clf.getcontactinfo(cat)
+                        relatedrows = clf.findsimilar()
 
-                    # line_bot_api.reply_message(
-                    #     event.reply_token,
-                    #     TextSendMessage(text=feedbackstring)
-                    # )
+                        feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+                        line_bot_api.reply_message(
+                            event.reply_token,
+                            TextSendMessage(text=feedbackstring)
+                        )
+                        
+                        _handle_text_msg(event, relatedrows, contactinfo)
 
         return HttpResponse()
     else:
@@ -120,8 +123,9 @@ def callback(request):
 def webcallback(request, query):
     clf = Classifier(query)
     cat = clf.predict_cat()
-    relatedrows = clf.findsimilar()
-    feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+    feedbackstring = clf.getcontactinfo(cat)
+    # relatedrows = clf.findsimilar()
+    # feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
     return HttpResponse(feedbackstring)
 
 def index(request):

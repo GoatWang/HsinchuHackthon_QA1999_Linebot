@@ -138,3 +138,6 @@ STATIC_URL = '/static/'
 # )
 
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+
+TIMEOUT = 1000
