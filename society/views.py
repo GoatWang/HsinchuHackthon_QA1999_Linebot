@@ -32,6 +32,7 @@ def _handle_text_msg(event, relatedrows, contactinfo):
 
     actions = []
     for num, row in relatedrows.iterrows():
+        print(row['question'], row['ans'])
         actions.append(MessageTemplateAction(label=row['question'], text=row['ans']))
     actions.append(MessageTemplateAction(label="皆不是以上問題!", text=contactinfo))
 
@@ -42,12 +43,15 @@ def _handle_text_msg(event, relatedrows, contactinfo):
             # thumbnail_image_url='https://example.com/image.jpg',
             title='您是否要請問以下問題?',
             text='Please select',
-            actions = actions
-            # actions=[
-            #     MessageTemplateAction(label='message', text='message text'),
-            #     PostbackTemplateAction(label='postback', text='postback text', data='action=buy&itemid=1'),
-            #     URITemplateAction(label='uri', uri='http://example.com/')
-            # ]
+            # actions = actions
+            actions=[
+                MessageTemplateAction(label='message', text='message text'),
+                MessageTemplateAction(label='message', text='message text'),
+                MessageTemplateAction(label='message', text='message text'),
+                MessageTemplateAction(label='message', text='message text'),
+                # PostbackTemplateAction(label='postback', text='postback text', data='action=buy&itemid=1'),
+                # URITemplateAction(label='uri', uri='http://example.com/')
+            ]
         )
     )
     
