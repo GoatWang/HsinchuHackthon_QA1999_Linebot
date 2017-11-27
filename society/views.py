@@ -33,12 +33,12 @@ def _handle_text_msg(event, relatedrows, contactinfo):
     actions = []
     for num, row in relatedrows.iterrows():
         actions.append(MessageTemplateAction(label=row['question'], text=row['ans']))
-
     actions.append(MessageTemplateAction(label="皆不是以上問題!", text=contactinfo))
 
     message = TemplateSendMessage(
-        alt_text='Buttons template',
+        alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
+            
             # thumbnail_image_url='https://example.com/image.jpg',
             title='您是否要請問以下問題?',
             text='Please select',
