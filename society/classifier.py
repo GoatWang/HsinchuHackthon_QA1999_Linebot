@@ -95,7 +95,7 @@ class Classifier():
 
         feedbackstring = "您是否要請教以下問題?\n"
         # feedbackstring = ""
-        count = 0
+        count = 1
         for n, row in relatedrows.iterrows():
             feedbackstring += str(count) + ". " + row['question'].replace('\n', '') + "\n"
             # feedbackstring += row['ans'] + "\n"
