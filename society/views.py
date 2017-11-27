@@ -44,11 +44,11 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
             #     PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True')
             # ]
             actions=[
-                PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True'),
+                # PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True'),
                 MessageTemplateAction(label='message', text='message text'),
                 MessageTemplateAction(label='message', text='message text'),
                 MessageTemplateAction(label='message', text='message text'),
-                # PostbackTemplateAction(label='postback', text='postback text', data='action=buy&itemid=1'),
+                PostbackTemplateAction(label='postback', text='postback text', data='action=buy&itemid=1'),
                 # URITemplateAction(label='uri', uri='http://example.com/')
             ]
         )
