@@ -43,9 +43,9 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
             text= feedbackstring[:159],
             # actions = actions,
             actions = [
-                PostbackTemplateAction(label="1. " + questions[0][:7] + "...", text=answers[0][:200], data='buttonfeedback=1'),
-                PostbackTemplateAction(label="2. " + questions[1][:7] + "...", text=answers[1][:200], data='buttonfeedback=1'),
-                PostbackTemplateAction(label="3. " + questions[2][:7] + "...", text=answers[2][:200], data='buttonfeedback=1'),
+                PostbackTemplateAction(label="1. " + questions[0][:7] + "...", text="回覆您的問題:\n" + answers[0][:300], data='buttonfeedback=1'),
+                PostbackTemplateAction(label="2. " + questions[1][:7] + "...", text="回覆您的問題:\n" + answers[1][:300], data='buttonfeedback=1'),
+                PostbackTemplateAction(label="3. " + questions[2][:7] + "...", text="回覆您的問題:\n" + answers[2][:300], data='buttonfeedback=1'),
                 PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=1')
             ]
         )
@@ -65,8 +65,6 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
 
 @csrf_exempt
 def callback(request):
-    print(request)
-
     if request.method == 'POST':
         signature = request.META['HTTP_X_LINE_SIGNATURE']
         body = request.body.decode('utf-8')
@@ -82,19 +80,20 @@ def callback(request):
         for event in events:
             if isinstance(event, MessageEvent):
                 if isinstance(event.message, TextMessage):
-                    clf = Classifier(event.message.text)
-                    cat = clf.predict_cat()
-                    contactinfo = clf.getcontactinfo(cat)
-                    relatedrows = clf.findsimilar()
-                    feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
-                    print(len(feedbackstring))
-                    print(len(relatedrows))
-                    # line_bot_api.reply_message(
-                    #     event.reply_token,
-                    #     TextSendMessage(text=feedbackstring)
-                    # )
-                    
-                    _handle_text_msg(event, relatedrows, contactinfo, feedbackstring)
+                    if not event.message.text.startswith("回覆"):
+                        clf = Classifier(event.message.text)
+                        cat = clf.predict_cat()
+                        contactinfo = clf.getcontactinfo(cat)
+                        relatedrows = clf.findsimilar()
+                        feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+                        print(len(feedbackstring))
+                        print(len(relatedrows))
+                        # line_bot_api.reply_message(
+                        #     event.reply_token,
+                        #     TextSendMessage(text=feedbackstring)
+                        # )
+                        
+                        _handle_text_msg(event, relatedrows, contactinfo, feedbackstring)
 
         return HttpResponse()
     else:
