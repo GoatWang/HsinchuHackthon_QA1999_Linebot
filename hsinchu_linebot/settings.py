@@ -19,10 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'my^n8kr0t+u-e%ov*53c4=$@aa@#l@ic*kz0fhtp1v^d2z--l='
-# LINE_CHANNEL_ACCESS_TOKEN = "tZj82xh0kvDqcK7EJdRORtf9M18D+/S9H6o8zZbDTiZkwM+acNwWoKpprAKZF1kZwJSUNvuSmXNHJA/Y1N9mmECHxgqqNnYgdlFuk64fDQXZOfDO90zi/43aiMhsLAy/FzROMdypy9EpnooPKL0ZQwdB04t89/1O/w1cDnyilFU="
-# LINE_CHANNEL_SECRET = "8f62e3dfdb9b6d94ff8b4b404f95d4a7"
-
 from os import environ
 SECRET_KEY = environ.get('SECRET_KEY')
 LINE_CHANNEL_ACCESS_TOKEN = environ.get('LINE_CHANNEL_ACCESS_TOKEN')
