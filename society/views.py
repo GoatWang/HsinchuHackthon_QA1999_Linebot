@@ -29,21 +29,20 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 def _handle_text_msg(event, relatedrows, contactinfo):
     text = event.message.text
-    print(text)
+
     actions = []
+    count = 0
     for num, row in relatedrows.iterrows():
-        print(row['question'], row['ans'])
         # actions.append(MessageTemplateAction(label=row['question'][:10], text=row['ans'][:300]))
-        actions.append(PostbackTemplateAction(label=str(num) + row['question'][:15], text=row['ans'][:300], data='buttonfeedback=True'))
+        actions.append(PostbackTemplateAction(label=str(count) + row['question'][:5], text=row['ans'][:300], data='buttonfeedback=True'))
+        count += 1
     actions.append(MessageTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True'))
 
-    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
-    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
-    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
-            text='請選擇您的問題編號?',
+            title='您是否想問以下問題?'
+            text=,
             actions = actions
             # actions=[
             #     MessageTemplateAction(label='message', text='message text'),
@@ -108,11 +107,11 @@ def callback(request, buttonfeedback=False):
                         contactinfo = clf.getcontactinfo(cat)
                         relatedrows = clf.findsimilar()
 
-                        feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
-                        line_bot_api.reply_message(
-                            event.reply_token,
-                            TextSendMessage(text=feedbackstring)
-                        )
+                        # feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+                        # line_bot_api.reply_message(
+                        #     event.reply_token,
+                        #     TextSendMessage(text=feedbackstring)
+                        # )
                         
                         _handle_text_msg(event, relatedrows, contactinfo)
 
