@@ -27,7 +27,7 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 
 
-def _handle_text_msg(event, relatedrows, contactinfo):
+def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
     text = event.message.text
 
     actions = []
@@ -41,8 +41,8 @@ def _handle_text_msg(event, relatedrows, contactinfo):
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
-            title='您是否想問以下問題?'
-            text=,
+            title='您是否想問以下問題?',
+            text= feedbackstring,
             actions = actions
             # actions=[
             #     MessageTemplateAction(label='message', text='message text'),
@@ -107,13 +107,13 @@ def callback(request, buttonfeedback=False):
                         contactinfo = clf.getcontactinfo(cat)
                         relatedrows = clf.findsimilar()
 
-                        # feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+                        feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
                         # line_bot_api.reply_message(
                         #     event.reply_token,
                         #     TextSendMessage(text=feedbackstring)
                         # )
                         
-                        _handle_text_msg(event, relatedrows, contactinfo)
+                        _handle_text_msg(event, relatedrows, contactinfo, feedbackstring)
 
         return HttpResponse()
     else:
