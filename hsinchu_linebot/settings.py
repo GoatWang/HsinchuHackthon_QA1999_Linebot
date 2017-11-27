@@ -19,10 +19,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'my^n8kr0t+u-e%ov*53c4=$@aa@#l@ic*kz0fhtp1v^d2z--l='
-LINE_CHANNEL_ACCESS_TOKEN = "tZj82xh0kvDqcK7EJdRORtf9M18D+/S9H6o8zZbDTiZkwM+acNwWoKpprAKZF1kZwJSUNvuSmXNHJA/Y1N9mmECHxgqqNnYgdlFuk64fDQXZOfDO90zi/43aiMhsLAy/FzROMdypy9EpnooPKL0ZQwdB04t89/1O/w1cDnyilFU="
-LINE_CHANNEL_SECRET = "8f62e3dfdb9b6d94ff8b4b404f95d4a7"
+# SECRET_KEY = 'my^n8kr0t+u-e%ov*53c4=$@aa@#l@ic*kz0fhtp1v^d2z--l='
+# LINE_CHANNEL_ACCESS_TOKEN = "tZj82xh0kvDqcK7EJdRORtf9M18D+/S9H6o8zZbDTiZkwM+acNwWoKpprAKZF1kZwJSUNvuSmXNHJA/Y1N9mmECHxgqqNnYgdlFuk64fDQXZOfDO90zi/43aiMhsLAy/FzROMdypy9EpnooPKL0ZQwdB04t89/1O/w1cDnyilFU="
+# LINE_CHANNEL_SECRET = "8f62e3dfdb9b6d94ff8b4b404f95d4a7"
 
+from os import environ
+SECRET_KEY = environ.get('SECRET_KEY')
+LINE_CHANNEL_ACCESS_TOKEN = environ.get('LINE_CHANNEL_ACCESS_TOKEN')
+LINE_CHANNEL_SECRET = environ.get('LINE_CHANNEL_SECRET')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -127,17 +131,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-# PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
-# STATICFILES_DIRS = (
-#     os.path.join(PROJECT_ROOT, 'static'),
-# )
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
 
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 TIMEOUT = 10000
