@@ -51,19 +51,8 @@ class Classifier():
         return self.vectorterms
 
     def to_vec(self, test_sentence):
-        # print(test_sentence)
         words = list(jieba.cut(test_sentence, cut_all=False))
-        # print(", ".join(words))
         
-        # allrelated = []
-        # for keyword in words:
-        #     url = 'http://140.120.13.244:10000/kem/?keyword='+ keyword +'&lang=cht'
-        #     res = requests.get(url)
-        #     related = [term[0] for term in eval(res.text) if term[1] > 0.65]
-        #     allrelated.extend(related)
-        # words.extend(allrelated)
-        # print(", ".join(words))
-            
         self_main_list = [0] * len(self.vectorterms)
         for term in words:
             if term in self.vectorterms:
@@ -75,13 +64,11 @@ class Classifier():
         self_main_list = self.to_vec(self.test_sentence)
         vector = self_main_list
         cat_num = self.bst.predict(xgboost.DMatrix(np.array([vector,])))[0]
-        # print(cat_num)
 
         cat = None
         for key, value in self.cat_mapping.items():
             if str(int(cat_num)) == str(value):
                 cat = key
-        # print(cat)
         return cat
 
     def findsimilar(self):
@@ -89,7 +76,8 @@ class Classifier():
         test_vector = self.to_vec(self.test_sentence)
 
         similar_scores = []
-        for num, vector in enumerate(df['vector']):
+        for num, question in enumerate(df['question']):
+            vector = self.to_vec(question)
             score = cosine_similarity([np.array(vector), np.array(test_vector)])[0][1]
             similar_scores.append((num, score))
 
