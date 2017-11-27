@@ -29,9 +29,7 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
     text = event.message.text
-    print(relatedrows['question'])
-    print(relatedrows['question'][1])
-    print(str(relatedrows['question'][1])[:5])
+    questions = list(relatedrows['question'])
 
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
@@ -39,9 +37,9 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
             title='您是否想問以下問題?',
             text= feedbackstring,
             actions = [
-                PostbackTemplateAction(label="1. " + str(relatedrows['question'][0])[:5], text=relatedrows['ans'][0][:200], data='buttonfeedback=True'),
-                PostbackTemplateAction(label="2. " + str(relatedrows['question'][1])[:5], text=relatedrows['ans'][1][:200], data='buttonfeedback=True'),
-                PostbackTemplateAction(label="3. " + str(relatedrows['question'][2])[:5], text=relatedrows['ans'][2][:200], data='buttonfeedback=True'),
+                PostbackTemplateAction(label="1. " + questions[0][:5], text=relatedrows['ans'][0][:200], data='buttonfeedback=True'),
+                PostbackTemplateAction(label="2. " + questions[1][:5], text=relatedrows['ans'][1][:200], data='buttonfeedback=True'),
+                PostbackTemplateAction(label="3. " + questions[1][:5], text=relatedrows['ans'][2][:200], data='buttonfeedback=True'),
                 PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True')
             ]
             # actions=[
@@ -124,7 +122,7 @@ def webcallback(request, query):
     clf = Classifier(query)
     cat = clf.predict_cat()
     feedbackstring = clf.getcontactinfo(cat)
-    # relatedrows = clf.findsimilar()
+    relatedrows = clf.findsimilar()
     # feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
     return HttpResponse(feedbackstring)
 
