@@ -29,21 +29,19 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
     text = event.message.text
-
-    actions = []
-    count = 0
-    for num, row in relatedrows.iterrows():
-        # actions.append(MessageTemplateAction(label=row['question'][:10], text=row['ans'][:300]))
-        actions.append(PostbackTemplateAction(label=str(count) + row['question'][:5], text=row['ans'][:300], data='buttonfeedback=True'))
-        count += 1
-    actions.append(MessageTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True'))
+    print(relatedrows['question'][1][:5])
 
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
             title='您是否想問以下問題?',
             text= feedbackstring,
-            actions = actions
+            actions = [
+                PostbackTemplateAction(label="1. " + relatedrows['question'][0][:5], text=relatedrows['ans'][0][:200], data='buttonfeedback=True'),
+                PostbackTemplateAction(label="2. " + relatedrows['question'][1][:5], text=relatedrows['ans'][1][:200], data='buttonfeedback=True'),
+                PostbackTemplateAction(label="3. " + relatedrows['question'][2][:5], text=relatedrows['ans'][2][:200], data='buttonfeedback=True'),
+                PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True')
+            ]
             # actions=[
             #     MessageTemplateAction(label='message', text='message text'),
             #     MessageTemplateAction(label='message', text='message text'),
