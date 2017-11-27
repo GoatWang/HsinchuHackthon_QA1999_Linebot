@@ -123,7 +123,8 @@ def webcallback(request, query):
     cat = clf.predict_cat()
     feedbackstring = clf.getcontactinfo(cat)
     relatedrows = clf.findsimilar()
-    # feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+
+    print(feedbackstring[:300])
     return HttpResponse(feedbackstring)
 
 def index(request):
