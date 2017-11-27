@@ -23,10 +23,12 @@ class Classifier():
         else:
             ModelsDir = os.path.join('society', 'models')
 
+
         jieba.set_dictionary(os.path.join(ModelsDir, 'dict.txt.big'))
         with open(os.path.join(ModelsDir, 'cat_mapping'), 'r' , encoding='utf8') as f:
             self.cat_mapping = json.load(f)
-        with open(os.path.join(ModelsDir, 'vectorterms'), 'r' , encoding='utf8') as f:
+        # with open(os.path.join(ModelsDir, 'vectorterms'), 'r' , encoding='utf8') as f:
+        with open(os.path.join(ModelsDir, 'vectorterms_nonword2vec'), 'r' , encoding='utf8') as f: ##api can't be connected
             self.vectorterms = json.load(f)
         with open(os.path.join(ModelsDir, 'contactinfo.json'), 'r', encoding='utf8') as f:
             self.cat_contact_mapping = json.load(f)
@@ -38,7 +40,8 @@ class Classifier():
         self.test_vec = self.to_vec(test_sentence)
 
         self.bst = xgb.Booster({'nthread': 4})  # init model
-        self.bst.load_model(os.path.join(ModelsDir, '20171125 232430246178.model'))  # load data
+        # self.bst.load_model(os.path.join(ModelsDir, '20171125 232430246178.model'))  # load data ##api can't be connected
+        self.bst.load_model(os.path.join(ModelsDir, '20171127 095822590704.model'))  # load data
 
 
     def getcat_mapping(self):
@@ -52,13 +55,13 @@ class Classifier():
         words = list(jieba.cut(test_sentence, cut_all=False))
         # print(", ".join(words))
         
-        allrelated = []
-        for keyword in words:
-            url = 'http://140.120.13.244:10000/kem/?keyword='+ keyword +'&lang=cht'
-            res = requests.get(url)
-            related = [term[0] for term in eval(res.text) if term[1] > 0.65]
-            allrelated.extend(related)
-        words.extend(allrelated)
+        # allrelated = []
+        # for keyword in words:
+        #     url = 'http://140.120.13.244:10000/kem/?keyword='+ keyword +'&lang=cht'
+        #     res = requests.get(url)
+        #     related = [term[0] for term in eval(res.text) if term[1] > 0.65]
+        #     allrelated.extend(related)
+        # words.extend(allrelated)
         # print(", ".join(words))
             
         self_main_list = [0] * len(self.vectorterms)
