@@ -95,12 +95,17 @@ class Classifier():
 
         return df.loc[relatedquery_idxs]
 
-    def getfeedbackinfo(self, cat, relatedrows):
+    def getcontactinfo(self, cat):
         contactInfo = self.cat_contact_mapping.get(cat)
+        return contactInfo
+
+    def getfeedbackinfo(self, cat, relatedrows):
+        contactInfo = self.getcontactinfo(cat)
 
         feedbackstring = "您是否要請教以下問題?\n"
         for n, row in relatedrows.iterrows():
             feedbackstring += str(n + 1) + '. ' + row['question'] + "\n"
+            feedbackstring += row['ans'] + "\n"
         
         feedbackstring += "若沒有回答道您的問題，請參考以下聯絡方式: \n"
         feedbackstring += contactInfo
