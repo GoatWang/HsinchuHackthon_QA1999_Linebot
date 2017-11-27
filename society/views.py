@@ -29,7 +29,7 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 def _handle_text_msg(event, relatedrows, contactinfo):
     text = event.message.text
-
+    print(text)
     actions = []
     for num, row in relatedrows.iterrows():
         print(row['question'], row['ans'])
@@ -114,7 +114,7 @@ def callback(request, buttonfeedback=False):
                             TextSendMessage(text=feedbackstring)
                         )
                         
-                        _handle_text_msg(event, relatedrows, contactinfo)
+                        # _handle_text_msg(event, relatedrows, contactinfo)
 
         return HttpResponse()
     else:
