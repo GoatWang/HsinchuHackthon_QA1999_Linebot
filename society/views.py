@@ -33,15 +33,15 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
     answers = list(relatedrows['ans'])
 
     actions = []
-    for num, row in relatedrows.iterrows():
-        actions.append(PostbackTemplateAction(label="1. " + row['question'][:7] + "...", text=row['ans'][:200], data='buttonfeedback=1'))
+    for i in range(len(relatedrows)):
+        actions.append(PostbackTemplateAction(label="1. " + questions[i][:7] + "...", text=answers[i][:200], data='buttonfeedback=1'))
     actions.append(PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=1'))
-
+    
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
             text= feedbackstring[:159],
-            action =actions,
+            action = actions
             # actions = [
             #     PostbackTemplateAction(label="1. " + questions[0][:7] + "...", text=answers[0][:200], data='buttonfeedback=1'),
             #     PostbackTemplateAction(label="2. " + questions[1][:7] + "...", text=answers[1][:200], data='buttonfeedback=1'),
