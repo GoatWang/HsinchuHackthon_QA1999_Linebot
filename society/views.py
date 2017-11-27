@@ -114,7 +114,7 @@ def callback(request, buttonfeedback=False):
                             TextSendMessage(text=feedbackstring)
                         )
                         
-                        # _handle_text_msg(event, relatedrows, contactinfo)
+                        _handle_text_msg(event, relatedrows, contactinfo)
 
         return HttpResponse()
     else:
