@@ -39,7 +39,7 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
             actions = [
                 TextSendMessage(label="1. " + questions[0][:7] + "...", text="回覆您的問題:\n" + answers[0][:300]),
                 TextSendMessage(label="2. " + questions[1][:7] + "...", text="回覆您的問題:\n" + answers[1][:300]),
-                # TextSendMessage(label="3. " + questions[2][:7] + "...", text="回覆您的問題:\n" + answers[2][:300]),
+                TextSendMessage(label="3. " + questions[2][:7] + "...", text="回覆您的問題:\n" + answers[2][:300]),
                 TextSendMessage(label="皆不是以上問題!", text= "回覆您的問題:\n" + contactinfo[:300])
             ]
         )
