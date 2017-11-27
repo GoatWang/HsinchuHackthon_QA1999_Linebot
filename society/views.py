@@ -28,25 +28,24 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 
 def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
-    text = event.message.text
+    clf = Classifier(event.message.text)
+    cat = clf.predict_cat()
+    contactinfo = clf.getcontactinfo(cat)
+    relatedrows = clf.findsimilar()
+    feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+
     questions = list(relatedrows['question'])
     answers = list(relatedrows['ans'])
 
-    # actions = []
-    # for i in range(len(relatedrows)):
-    #     actions.append(PostbackTemplateAction(label="1. " + questions[i][:7] + "...", text=answers[i][:200], data='buttonfeedback=1'))
-    # actions.append(PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=1'))
-    
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
             text= feedbackstring[:159],
-            # actions = actions,
             actions = [
-                PostbackTemplateAction(label="1. " + questions[0][:7] + "...", text="回覆您的問題:\n" + answers[0][:250]),
-                PostbackTemplateAction(label="2. " + questions[1][:7] + "...", text="回覆您的問題:\n" + answers[1][:250]),
-                PostbackTemplateAction(label="3. " + questions[2][:7] + "...", text="回覆您的問題:\n" + answers[2][:250]),
-                PostbackTemplateAction(label="皆不是以上問題!", text= "回覆您的問題:\n" + contactinfo[:250])
+                MessageTemplateAction(label="1. " + questions[0][:7] + "...", text="回覆您的問題:\n" + answers[0][:250]),
+                MessageTemplateAction(label="2. " + questions[1][:7] + "...", text="回覆您的問題:\n" + answers[1][:250]),
+                MessageTemplateAction(label="3. " + questions[2][:7] + "...", text="回覆您的問題:\n" + answers[2][:250]),
+                MessageTemplateAction(label="皆不是以上問題!", text= "回覆您的問題:\n" + contactinfo[:250])
             ]
         )
     )
@@ -82,15 +81,17 @@ def callback(request):
             if isinstance(event, MessageEvent):
                 if isinstance(event.message, TextMessage):
                     if not event.message.text.startswith("回覆"):
-                        clf = Classifier(event.message.text)
-                        cat = clf.predict_cat()
-                        contactinfo = clf.getcontactinfo(cat)
-                        relatedrows = clf.findsimilar()
-                        print(relatedrows['question'])
-                        feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
-                        print(feedbackstring)
-                        print(len(feedbackstring))
-                        print(len(relatedrows))
+
+
+                        # clf = Classifier(event.message.text)
+                        # cat = clf.predict_cat()
+                        # contactinfo = clf.getcontactinfo(cat)
+                        # relatedrows = clf.findsimilar()
+                        # print(relatedrows['question'])
+                        # feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+                        # print(feedbackstring)
+                        # print(len(feedbackstring))
+                        # print(len(relatedrows))
                         # line_bot_api.reply_message(
                         #     event.reply_token,
                         #     TextSendMessage(text=feedbackstring)
