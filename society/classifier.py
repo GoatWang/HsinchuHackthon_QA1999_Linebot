@@ -76,13 +76,14 @@ class Classifier():
         test_vector = self.to_vec(self.test_sentence)
 
         similar_scores = []
-        vectors = []
-        for num, question in enumerate(df['question']):
-            vector = self.to_vec(question)
-            if not vector in vectors:  ## prevent duplicate questions
+        questions = []
+        for idx, row in df.iterrows():
+            question = row['question']
+            if not question in questions:
+                vector = self.to_vec(row['question'])
                 score = cosine_similarity([np.array(vector), np.array(test_vector)])[0][1]
-                similar_scores.append((num, score))
-                vectors.append(vector)
+                similar_scores.append((idx, score))
+                questions.append(question)
 
         sorted_scores = sorted(similar_scores, key=lambda x: x[1], reverse=True)
         relatedquery_idxs =  [idx[0] for idx in sorted_scores][:3]
