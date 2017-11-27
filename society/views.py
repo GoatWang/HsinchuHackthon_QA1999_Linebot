@@ -37,6 +37,9 @@ def _handle_text_msg(event, relatedrows, contactinfo):
         actions.append(PostbackTemplateAction(label=str(num) + row['question'][:15], text=row['ans'][:300], data='buttonfeedback=True'))
     actions.append(MessageTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True'))
 
+    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
+    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
+    print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa')
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
