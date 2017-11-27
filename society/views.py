@@ -35,12 +35,12 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
-            text= feedbackstring,
+            text= feedbackstring[:159],
             actions = [
-                PostbackTemplateAction(label="1. " + questions[0][:5], text=answers[0][:200], data='buttonfeedback=True'),
-                PostbackTemplateAction(label="2. " + questions[1][:5], text=answers[1][:200], data='buttonfeedback=True'),
-                PostbackTemplateAction(label="3. " + questions[1][:5], text=answers[2][:200], data='buttonfeedback=True'),
-                PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True')
+                PostbackTemplateAction(label="1. " + questions[0][:7] + "...", text=answers[0][:200], data='buttonfeedback=1'),
+                PostbackTemplateAction(label="2. " + questions[1][:7] + "...", text=answers[1][:200], data='buttonfeedback=1'),
+                PostbackTemplateAction(label="3. " + questions[1][:7] + "...", text=answers[2][:200], data='buttonfeedback=1'),
+                PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=1')
             ]
             # actions=[
             #     # PostbackTemplateAction(label="皆不是以上問題!", text=contactinfo[:300], data='buttonfeedback=True'),
@@ -69,8 +69,9 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
 
 
 @csrf_exempt
-def callback(request, buttonfeedback=False):
-    if request.method == 'POST':
+def callback(request, buttonfeedback=0):
+    print(buttonfeedback)
+    if request.method == 'POST' and not buttonfeedback:
         signature = request.META['HTTP_X_LINE_SIGNATURE']
         body = request.body.decode('utf-8')
         
@@ -85,18 +86,18 @@ def callback(request, buttonfeedback=False):
         for event in events:
             if isinstance(event, MessageEvent):
                 if isinstance(event.message, TextMessage):
-                    if not buttonfeedback:
-                        clf = Classifier(event.message.text)
-                        cat = clf.predict_cat()
-                        contactinfo = clf.getcontactinfo(cat)
-                        relatedrows = clf.findsimilar()
-                        feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
-                        # line_bot_api.reply_message(
-                        #     event.reply_token,
-                        #     TextSendMessage(text=feedbackstring)
-                        # )
-                        
-                        _handle_text_msg(event, relatedrows, contactinfo, feedbackstring)
+                    clf = Classifier(event.message.text)
+                    cat = clf.predict_cat()
+                    contactinfo = clf.getcontactinfo(cat)
+                    relatedrows = clf.findsimilar()
+                    feedbackstring = clf.getfeedbackinfo(cat, relatedrows)
+                    print(len(feedbackstring))
+                    # line_bot_api.reply_message(
+                    #     event.reply_token,
+                    #     TextSendMessage(text=feedbackstring)
+                    # )
+                    
+                    _handle_text_msg(event, relatedrows, contactinfo, feedbackstring)
 
         return HttpResponse()
     else:
