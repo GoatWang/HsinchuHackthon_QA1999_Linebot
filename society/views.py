@@ -28,7 +28,10 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 
 def _handle_text_msg(event):
-    clf = Classifier(event.message.text)
+    text = event.message.text
+    print(text)
+    
+    clf = Classifier(text)
     cat = clf.predict_cat()
     contactinfo = clf.getcontactinfo(cat)
     relatedrows = clf.findsimilar()
