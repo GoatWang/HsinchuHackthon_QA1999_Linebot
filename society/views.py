@@ -27,7 +27,7 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 
 
 
-def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
+def _handle_text_msg(event):
     clf = Classifier(event.message.text)
     cat = clf.predict_cat()
     contactinfo = clf.getcontactinfo(cat)
@@ -97,7 +97,7 @@ def callback(request):
                         #     TextSendMessage(text=feedbackstring)
                         # )
                         
-                        _handle_text_msg(event, relatedrows, contactinfo, feedbackstring)
+                        _handle_text_msg(event)
 
         return HttpResponse()
     else:
