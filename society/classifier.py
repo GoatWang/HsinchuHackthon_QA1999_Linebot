@@ -41,7 +41,7 @@ class Classifier():
 
         self.bst = xgb.Booster({'nthread': 4})  # init model
         # self.bst.load_model(os.path.join(ModelsDir, '20171125 232430246178.model'))  # load data ##api can't be connected
-        self.bst.load_model(os.path.join(ModelsDir, '20171127 095822590704.model'))  # load data
+        self.bst.load_model(os.path.join(ModelsDir, '20171127 125648530042.model'))  # load data
 
 
     def getcat_mapping(self):
