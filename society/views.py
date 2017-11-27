@@ -35,7 +35,6 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
     message = TemplateSendMessage(
         alt_text='請再傳送一次訊息!',
         template=ButtonsTemplate(
-            title='您是否想問以下問題?',
             text= feedbackstring,
             # actions = [
             #     PostbackTemplateAction(label="1. " + questions[0][:5], text=answers[0][:200], data='buttonfeedback=True'),
@@ -54,20 +53,6 @@ def _handle_text_msg(event, relatedrows, contactinfo, feedbackstring):
         )
     )
     
-    
-    
-    
-    # message = TemplateSendMessage(
-    #     alt_text='Confirm template',
-    #     template=ConfirmTemplate(
-    #         text='Are you sure?',
-    #         actions=[
-    #             PostbackTemplateAction(label='postback', text='postback text', data='action=buy&itemid=1'),
-    #             MessageTemplateAction(label='message', text='message text')
-    #         ]
-    #     )
-    # )
-
     line_bot_api.reply_message(
         event.reply_token,
         message

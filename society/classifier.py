@@ -93,8 +93,8 @@ class Classifier():
     def getfeedbackinfo(self, cat, relatedrows):
         contactInfo = self.getcontactinfo(cat)
 
-        # feedbackstring = "您是否要請教以下問題?\n"
-        feedbackstring = ""
+        feedbackstring = "您是否要請教以下問題?\n"
+        # feedbackstring = ""
         count = 0
         for n, row in relatedrows.iterrows():
             feedbackstring += str(count) + ". " + row['question'].replace('\n', '') + "\n"
