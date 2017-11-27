@@ -32,7 +32,7 @@ class Classifier():
             self.vectorterms = json.load(f)
         with open(os.path.join(ModelsDir, 'contactinfo.json'), 'r', encoding='utf8') as f:
             self.cat_contact_mapping = json.load(f)
-        with open(os.path.join(ModelsDir, 'questions.json'), 'r', encoding='utf8') as f:
+        with open(os.path.join(ModelsDir, 'ProcessedData.json'), 'r', encoding='utf8') as f:
             self.data = json.load(f)
             self.df = pd.DataFrame(self.data)
 
