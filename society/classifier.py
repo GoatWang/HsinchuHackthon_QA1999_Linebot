@@ -78,7 +78,7 @@ class Classifier():
         similar_scores = []
         questions = []
         for idx, row in df.iterrows():
-            question = row['question'].replace('\n', '').replace('\r', '').replace('\t', '').replace(' ', '')
+            question = row['question'].replace('\n', '').replace('\r', '').replace('\t', '').replace(' ', '').replace('？', '?')
             if not question in questions:
                 vector = self.to_vec(question)
                 score = cosine_similarity([np.array(vector), np.array(test_vector)])[0][1]
