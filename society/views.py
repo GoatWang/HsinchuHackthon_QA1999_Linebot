@@ -41,7 +41,7 @@ def _handle_text_msg(event):
     answers = list(relatedrows['ans'])
 
     message = TemplateSendMessage(
-        alt_text='請再傳送一次訊息!',
+        alt_text='您是否想問以下問題?',
         template=ButtonsTemplate(
             text= feedbackstring[:159],
             actions = [

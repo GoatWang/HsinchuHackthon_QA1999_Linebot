@@ -41,7 +41,7 @@ class Classifier():
 
         self.bst = xgb.Booster({'nthread': 4})  # init model
         # self.bst.load_model(os.path.join(ModelsDir, '20171125 232430246178.model'))  # load data ##api can't be connected
-        self.bst.load_model(os.path.join(ModelsDir, '20171127 125648530042.model'))  # load data
+        self.bst.load_model(os.path.join(ModelsDir, '20171128 092350824718.model'))  # load data
 
 
     def getcat_mapping(self):
@@ -51,7 +51,7 @@ class Classifier():
         return self.vectorterms
 
     def to_vec(self, test_sentence):
-        words = list(jieba.cut(test_sentence, cut_all=False))
+        words = list(jieba.cut(test_sentence, cut_all=True))
         
         self_main_list = [0] * len(self.vectorterms)
         for term in words:
@@ -78,7 +78,7 @@ class Classifier():
         similar_scores = []
         questions = []
         for idx, row in df.iterrows():
-            question = row['question'].replace('\n', '').replace('\r', '').replace('\t', '')
+            question = row['question'].replace('\n', '').replace('\r', '').replace('\t', '').repalce(' ', '')
             if not question in questions:
                 vector = self.to_vec(question)
                 score = cosine_similarity([np.array(vector), np.array(test_vector)])[0][1]
